@@ -1,31 +1,43 @@
 package com.example.comexamplemusicplayer;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 
 public class MusicPlayer {
     private MediaPlayer mediaPlayer;
+    public static final String path_File = "C:\\Users\\prave\\AndroidStudioProjects\\comexamplemusicplayer\\app\\src\\main\\res\\raw\\sim.mp3";
 
-    public void play(String filePath){
-        mediaPlayer = new MediaPlayer();
-        try{
-            mediaPlayer.setDataSource(filePath);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+    public void prepare() throws IOException {
+        mediaPlayer.prepare();
     }
-    public void pause(MediaPlayer player){
-        if(mediaPlayer != null && mediaPlayer.isPlaying()){
+
+    public void play() {
+        if(mediaPlayer==null){
+            try {
+                int uri = R.raw.simple;
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(path_File);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        mediaPlayer.start();
+    }
+    public void pause(){
+        if(mediaPlayer != null){
             mediaPlayer.pause();
         }
     }
 
-    public void stop(MediaPlayer player){
+    public void stop(){
+        stopPlayer();
+    }
+
+    private void stopPlayer(){
         if(mediaPlayer != null){
-            mediaPlayer.stop();
-            mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
         }

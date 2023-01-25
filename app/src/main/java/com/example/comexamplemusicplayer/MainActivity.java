@@ -1,58 +1,59 @@
 package com.example.comexamplemusicplayer;
 
-import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+
 public class MainActivity extends AppCompatActivity {
-    private MediaPlayer player;
-    private MusicPlayer musicPlayer;
+    MediaPlayer player;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        musicPlayer = new MusicPlayer();
-        player = new MediaPlayer();
-
-        Button playButton = (Button) findViewById(R.id.button);
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicPlayer.play("C:\\Users\\prave\\Desktop\\Death Grips - Get Got.mp3\"");
-            }
-        });
-
-        Button pauseButton = (Button) findViewById(R.id.button2);
-        pauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicPlayer.pause(player);
-            }
-        });
-
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button stopButton = (Button) findViewById(R.id.button3);
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                musicPlayer.stop(player);
-            }
-        });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (player != null) {
-            player.release();
-            player = null;
+    public void play(View v){
+        if(player==null){
+            player= MediaPlayer.create(this,R.raw.sim);
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    stopPlayer();
+                }
+            });
         }
-
+        player.start();
     }
 
+    public void pause(View v){
+        if(player!=null){
+            player.pause();
+        }
+    }
+
+    public void stop(View v){
+        stopPlayer();
+    }
+
+
+    private void stopPlayer(){
+        if(player!=null){
+            player.release();
+            player=null;
+            Toast.makeText(this,"MediaPlayer released",Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        stopPlayer();
+    }
 }
